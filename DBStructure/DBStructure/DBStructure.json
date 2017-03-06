@@ -1,0 +1,16 @@
+[
+	{
+		"User": {
+			"PANNumber": "varchar(255)",
+			"Address": "varchar(255)",
+			"Id": "int PRIMARY KEY NOT_NULL",
+			"Name": "varchar(255) NOT_NULL"
+		}
+	},
+	{
+		"Purchase": {
+			"Purchase_ID": "int PRIMARY KEY NOT_NULL",
+			"Purchase_Description": "varchar(255)"
+		}
+	}
+]
