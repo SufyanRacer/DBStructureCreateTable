@@ -19,7 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.title = @"All Users";
     users = [[DBManager getSharedInstance] fetchAllUsers];
     
 }

@@ -19,6 +19,7 @@
 		0A485B081E6EC688003591E4 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A485B071E6EC688003591E4 /* DetailViewController.m */; };
 		0A485B0D1E6EC7F6003591E4 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A485B0C1E6EC7F6003591E4 /* User.m */; };
 		0A485B121E6ED930003591E4 /* UserDetailsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A485B111E6ED930003591E4 /* UserDetailsCell.m */; };
+		0A485B171E6EF411003591E4 /* DBOperations.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A485B161E6EF411003591E4 /* DBOperations.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,8 @@
 		0A485B0C1E6EC7F6003591E4 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Model/User/User.m; sourceTree = "<group>"; };
 		0A485B101E6ED930003591E4 /* UserDetailsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserDetailsCell.h; path = View/Cells/UserDetailsCell/UserDetailsCell.h; sourceTree = "<group>"; };
 		0A485B111E6ED930003591E4 /* UserDetailsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserDetailsCell.m; path = View/Cells/UserDetailsCell/UserDetailsCell.m; sourceTree = "<group>"; };
+		0A485B151E6EF411003591E4 /* DBOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBOperations.h; path = Model/Operations/DBOperations.h; sourceTree = "<group>"; };
+		0A485B161E6EF411003591E4 /* DBOperations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DBOperations.m; path = Model/Operations/DBOperations.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +82,6 @@
 			children = (
 				0A485B0E1E6ED8DF003591E4 /* View */,
 				0A485B091E6EC7CB003591E4 /* Model */,
-				0A485B021E6EA6E9003591E4 /* DBManager */,
 				0A3A3A3D1E6D513B004DBDD1 /* DBStructure.json */,
 				0A3A3A291E6D43FD004DBDD1 /* AppDelegate.h */,
 				0A3A3A2A1E6D43FD004DBDD1 /* AppDelegate.m */,
@@ -125,6 +127,8 @@
 		0A485B091E6EC7CB003591E4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0A485B021E6EA6E9003591E4 /* DBManager */,
+				0A485B141E6EF361003591E4 /* Operations */,
 				0A485B0A1E6EC7D6003591E4 /* User */,
 			);
 			name = Model;
@@ -162,6 +166,15 @@
 				0A485B111E6ED930003591E4 /* UserDetailsCell.m */,
 			);
 			name = UserDetailsCell;
+			sourceTree = "<group>";
+		};
+		0A485B141E6EF361003591E4 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				0A485B151E6EF411003591E4 /* DBOperations.h */,
+				0A485B161E6EF411003591E4 /* DBOperations.m */,
+			);
+			name = Operations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -239,6 +252,7 @@
 				0A485B121E6ED930003591E4 /* UserDetailsCell.m in Sources */,
 				0A485B081E6EC688003591E4 /* DetailViewController.m in Sources */,
 				0A3A3A2E1E6D43FD004DBDD1 /* ViewController.m in Sources */,
+				0A485B171E6EF411003591E4 /* DBOperations.m in Sources */,
 				0A485B0D1E6EC7F6003591E4 /* User.m in Sources */,
 				0A3A3A2B1E6D43FD004DBDD1 /* AppDelegate.m in Sources */,
 				0A3A3A281E6D43FD004DBDD1 /* main.m in Sources */,
