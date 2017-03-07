@@ -7,6 +7,9 @@
 //
 
 #import "ViewController.h"
+#import "DBManager.h"
+#import "User.h"
+#import "DetailViewController.h"
 
 @interface ViewController ()
 {
@@ -16,15 +19,18 @@
 
 @implementation ViewController
 
+@synthesize tableQueries;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    tableQueries = [[NSMutableArray alloc] init];
     NSString* fileLocation = @"DBStructure.json";
     NSString *filePath = [[NSBundle mainBundle] pathForResource:[fileLocation stringByDeletingPathExtension] ofType:[fileLocation pathExtension]];
     NSData* data = [NSData dataWithContentsOfFile:filePath];
     NSError* error = nil;
     dbStructure = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     [self createTableQueries];
-    
+    [self makeDatabaseWithQueries];
 }
 
 -(void)createTableQueries {
@@ -33,8 +39,8 @@
     for (NSDictionary* object in dbStructure) {
         tableName = [self getTableNameFromDictionary:object];
         attributesDictionary = [object valueForKey:tableName];
-        NSString* string = [self makeTableWithName:tableName andAttributesWithDictionary:attributesDictionary];
-        // Execute query...
+        NSString* query = [self makeTableQueryWithName:tableName andAttributesWithDictionary:attributesDictionary];
+        [tableQueries addObject:query];
     }
 }
 
@@ -42,8 +48,7 @@
     return [[dict allKeys] objectAtIndex:0];
 }
 
-
--(NSString*)makeTableWithName:(NSString*)tableName andAttributesWithDictionary:(NSDictionary*)dict{
+-(NSString*)makeTableQueryWithName:(NSString*)tableName andAttributesWithDictionary:(NSDictionary*)dict{
     
     NSMutableString* queryString = [[NSMutableString alloc] initWithString:@""];
     NSArray* allSortedKeys = [dict allKeys];
@@ -70,5 +75,21 @@
     NSLog(@"Query for creating table %@ : %@",tableName, queryString);
     return queryString;
 }
+
+-(void)makeDatabaseWithQueries{
+    DBManager* manager = [DBManager getSharedInstance];
+    [manager createTablesWith:tableQueries];
+}
+
+- (IBAction)saveDataInDatabase:(id)sender {
+    User* user = [[User alloc] initWithID:[self.idField.text intValue] name:self.nameField.text panNumber:self.panNumberField.text address:self.addressField.text];
+    DBManager* manager = [DBManager getSharedInstance];
+    [manager saveDataToUserTable:user];
+    
+    DetailViewController* detailViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
+    [self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+
 
 @end

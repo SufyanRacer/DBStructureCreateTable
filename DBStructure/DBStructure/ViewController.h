@@ -11,6 +11,14 @@
 
 @interface ViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UITextField *idField;
+
+@property (weak, nonatomic) IBOutlet UITextField *nameField;
+
+@property (weak, nonatomic) IBOutlet UITextField *panNumberField;
+@property (weak, nonatomic) IBOutlet UITextField *addressField;
+
+@property (atomic) NSMutableArray* tableQueries;
 
 @end
 
