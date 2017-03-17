@@ -33,37 +33,28 @@
 
 -(void)createTableQueries {
     NSString* tableName;
-    NSDictionary* attributesDictionary;
+    NSArray* attributesList;
     for (NSDictionary* object in dbStructure) {
-        tableName = [self getTableNameFromDictionary:object];
-        attributesDictionary = [object valueForKey:tableName];
-        NSString* query = [self makeTableQueryWithName:tableName andAttributesWithDictionary:attributesDictionary];
+        tableName = [self getFirstKeyNameFromDictionary:object];
+        attributesList = [object valueForKey:tableName];
+        NSString* query = [self makeTableQueryWithName:tableName andAttributesWithDictionary:attributesList];
         [tableQueries addObject:query];
     }
 }
 
--(NSString*)getTableNameFromDictionary:(NSDictionary*)dict {
+-(NSString*)getFirstKeyNameFromDictionary:(NSDictionary*)dict {
     return [[dict allKeys] objectAtIndex:0];
 }
 
--(NSString*)makeTableQueryWithName:(NSString*)tableName andAttributesWithDictionary:(NSDictionary*)dict{
+-(NSString*)makeTableQueryWithName:(NSString*)tableName andAttributesWithDictionary:(NSArray*)attributesList{
     
     NSMutableString* queryString = [[NSMutableString alloc] initWithString:@""];
-    NSArray* allSortedKeys = [dict allKeys];
     
-    for (int i=0; i<allSortedKeys.count; i++) {
-        NSString* value = [dict objectForKey:[allSortedKeys objectAtIndex:i]];
-        if ([[value lowercaseString] containsString:@"primary key"]) {
-            queryString = [NSMutableString stringWithFormat:@"%@ %@, %@",[allSortedKeys objectAtIndex:i],[dict objectForKey:[allSortedKeys objectAtIndex:i]],queryString];
-        } else{
-            NSMutableString* attribString = [NSMutableString stringWithFormat:@"%@ %@",[allSortedKeys objectAtIndex:i],[dict objectForKey:[allSortedKeys objectAtIndex:i]]];
-            [queryString appendString:attribString];
-            if (allSortedKeys.count-1 == i) {
-                [queryString appendString:@""];
-            }else{
-                [queryString appendString:@","];
-            }
-        }
+    for (int i=0; i<attributesList.count; i++) {
+        NSDictionary* attrib = [attributesList objectAtIndex:i];
+        NSString* attribName = [self getFirstKeyNameFromDictionary:attrib];
+        NSString* value = [attrib objectForKey:attribName];
+        [queryString appendString:[NSString stringWithFormat:@"%@ %@,",attribName, value]];
     }
     queryString = [NSMutableString stringWithFormat:@"CREATE TABLE %@ (%@)", tableName, queryString];
     [queryString replaceOccurrencesOfString:@",)"
@@ -78,5 +69,14 @@
     DBManager* manager = [DBManager getSharedInstance];
     [manager createTablesWith:tableQueries];
 }
+
+
+- (BOOL)updateRecordWithUser:(User*)user{
+    
+    NSString* query = [NSString stringWithFormat:@"UPDATE peopleInfo SET Name='%@', PANNumber='%@', Address='%@' where Id=%d", user.name, user.panNumber, user.address, user.userId];
+    DBManager* manager = [DBManager getSharedInstance];
+    return [manager updateRecordWithQuery:query];
+}
+
 
 @end

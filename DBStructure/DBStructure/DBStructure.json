@@ -1,16 +1,16 @@
 [
 	{
-		"User": {
-            "Id": "INTEGER PRIMARY KEY",
-			"PANNumber": "varchar(255)",
-			"Address": "varchar(255)",
-			"Name": "varchar(255)"
-		}
+		"User": [
+            {"Id": "INTEGER PRIMARY KEY AUTOINCREMENT"},
+            {"Name": "varchar(255)"},
+			{"PANNumber": "varchar(255)"},
+			{"Address": "varchar(255)"}
+		]
 	},
 	{
-		"Purchase": {
-			"Purchase_ID": "INTEGER PRIMARY KEY",
-			"Purchase_Description": "varchar(255)"
-		}
+		"Purchase": [
+			{"Purchase_ID": "INTEGER PRIMARY KEY"},
+			{"Purchase_Description": "varchar(255)"}
+		]
 	}
 ]

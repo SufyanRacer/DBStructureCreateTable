@@ -17,4 +17,6 @@
 
 @property (atomic)NSArray* users;
 
+@property(atomic)NSString* name;
+
 @end

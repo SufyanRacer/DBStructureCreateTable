@@ -23,4 +23,6 @@
 -(BOOL)saveDataToUserTable:(User*)user;
 -(NSArray*)fetchAllUsers;
 -(BOOL)deleteRecordFromUserWithID:(int)userID;
+-(BOOL)updateRecordWithQuery:(NSString*)querySQL;
+
 @end

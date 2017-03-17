@@ -10,7 +10,17 @@
 
 @implementation User
 
--(instancetype)initWithID:(int)userId name:(NSString *)name panNumber:(NSString *)panNumber address:(NSString *)address{
+-(instancetype)initWithName:(NSString *)name panNumber:(NSString *)panNumber address:(NSString *)address{
+    if (!self) {
+        self = [super init];
+    }
+    self.name = name;
+    self.panNumber = panNumber;
+    self.address = address;
+    return self;
+}
+
+-(instancetype)initWithID:(int)userId name:(NSString*)name panNumber:(NSString*)panNumber address:(NSString*)address{
     if (!self) {
         self = [super init];
     }

@@ -26,15 +26,39 @@
     [[DBOperations new] initializeDatabase];
 }
 
-- (IBAction)saveDataInDatabase:(id)sender {
-    User* user = [[User alloc] initWithID:[self.idField.text intValue] name:self.nameField.text panNumber:self.panNumberField.text address:self.addressField.text];
-    DBManager* manager = [DBManager getSharedInstance];
-    [manager saveDataToUserTable:user];
-    
-    DetailViewController* detailViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
-    [self.navigationController pushViewController:detailViewController animated:YES];
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
+    if ([identifier isEqualToString:@"saveUser"]) {
+        return [self checkAllFields];
+    } else {
+        return true;
+    }
 }
 
+- (BOOL)checkAllFields {
+    if ([self.nameField.text isEqualToString:@""] || [self.panNumberField.text isEqualToString:@""] || [self.addressField.text isEqualToString:@""]) {
+        [self showEmptyFieldsAlert];
+        return false;
+    } else {
+        [self saveDataToDatabase];
+        return true;
+    }
+}
 
+-(void)saveDataToDatabase {
+    User* user = [[User alloc] initWithName:self.nameField.text panNumber:self.panNumberField.text address:self.addressField.text];
+    DBManager* manager = [DBManager getSharedInstance];
+    [manager saveDataToUserTable:user];
+}
+
+- (void)showEmptyFieldsAlert{
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"Please Enter all fields." preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    [alert addAction:cancel];
+    [self presentViewController:alert animated:YES completion:^{
+        
+    }];
+}
 
 @end

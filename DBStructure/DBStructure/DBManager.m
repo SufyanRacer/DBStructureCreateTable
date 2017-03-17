@@ -23,13 +23,20 @@ static sqlite3_stmt *statement = nil;
     return sharedInstance;
 }
 
--(void)setDatabasePath{
+-(NSString*)getDocumentDirectoryPath {
     NSString *docsDir;
     NSArray *dirPaths;
     // Get the documents directory
     dirPaths = NSSearchPathForDirectoriesInDomains
     (NSDocumentDirectory, NSUserDomainMask, YES);
     docsDir = dirPaths[0];
+    
+    return docsDir;
+    
+}
+
+-(void)setDatabasePath{
+    NSString* docsDir = [self getDocumentDirectoryPath];
     // Build the path to the database file
     databasePath = [[NSString alloc] initWithString:
                     [docsDir stringByAppendingPathComponent: @"User_database.sqlite"]];
@@ -55,15 +62,15 @@ static sqlite3_stmt *statement = nil;
     return isSuccess;
 }
 
--(BOOL)createTablesWith:(NSArray*)createTableQueries{
-    if ([createTableQueries count]>= 1) {
+-(BOOL)createTablesWith:(NSArray*)tableQueries{
+    if ([tableQueries count]>= 1) {
         BOOL isSuccess = YES;
         
         const char *dbpath = [databasePath UTF8String];
         if (sqlite3_open(dbpath, &database) == SQLITE_OK)
         {
         
-            for (NSString* query in createTableQueries) {
+            for (NSString* query in tableQueries) {
                 char *errMsg;
                 const char *sql_stmt =  [query UTF8String];
                 if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK)
@@ -86,7 +93,7 @@ static sqlite3_stmt *statement = nil;
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK)
     {
-        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO User (Id,name, PANNumber,Address) VALUES(%d,'%@', '%@', '%@')",user.userId, user.name,user.panNumber,user.address];
+        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO User (name, PANNumber,Address) VALUES('%@', '%@', '%@')", user.name,user.panNumber,user.address];
         const char *insert_stmt = [insertSQL UTF8String];
         sqlite3_prepare_v2(database, insert_stmt,-1, &statement, NULL);
         if (sqlite3_step(statement) == SQLITE_DONE)
@@ -105,15 +112,15 @@ static sqlite3_stmt *statement = nil;
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK)
     {
-        NSString *insertSQL = @"SELECT * FROM User";
-        const char *insert_stmt = [insertSQL UTF8String];
+        NSString *fetchSQL = @"SELECT * FROM User";
+        const char *fetch_stmt = [fetchSQL UTF8String];
         
-        if (sqlite3_prepare_v2(database, insert_stmt,-1, &statement, NULL) == SQLITE_OK) {
+        if (sqlite3_prepare_v2(database, fetch_stmt,-1, &statement, NULL) == SQLITE_OK) {
             while (sqlite3_step(statement) == SQLITE_ROW) {
                 int userID = sqlite3_column_int(statement, 0);
-                char *panNumberChars = (char *) sqlite3_column_text(statement, 1);
-                char *addressChars = (char *) sqlite3_column_text(statement, 2);
-                char *nameChars = (char *) sqlite3_column_text(statement, 3);
+                char *nameChars = (char *) sqlite3_column_text(statement, 1);
+                char *panNumberChars = (char *) sqlite3_column_text(statement, 2);
+                char *addressChars = (char *) sqlite3_column_text(statement, 3);
                 NSString *name = [[NSString alloc] initWithUTF8String:nameChars];
                 NSString *panNumber = [[NSString alloc] initWithUTF8String:panNumberChars];
                 NSString *address = [[NSString alloc] initWithUTF8String:addressChars];
@@ -126,6 +133,26 @@ static sqlite3_stmt *statement = nil;
     return users;
     
 }
+
+-(BOOL)updateRecordWithQuery:(NSString*)querySQL{
+    
+    const char *dbpath = [databasePath UTF8String];
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK)
+    {
+        const char *query_stmt = [querySQL UTF8String];
+        sqlite3_prepare_v2(database, query_stmt,-1, &statement, NULL);
+        if (sqlite3_step(statement) == SQLITE_DONE)
+        {
+            NSLog(@"Record updated");
+            return YES;
+        } else {
+            NSLog(@"Failed to update record");
+            return NO;
+        }
+    }
+    return NO;
+}
+
 
 -(BOOL)deleteRecordFromUserWithID:(int)userID{
     

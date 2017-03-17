@@ -17,4 +17,5 @@
 
 -(instancetype)initWithID:(int)userId name:(NSString*)name panNumber:(NSString*)panNumber address:(NSString*)address;
 
+-(instancetype)initWithName:(NSString *)name panNumber:(NSString *)panNumber address:(NSString *)address;
 @end

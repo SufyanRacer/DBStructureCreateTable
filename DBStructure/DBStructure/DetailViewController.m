@@ -7,6 +7,7 @@
 //
 
 #import "DetailViewController.h"
+#import "EditUserDetailViewController.h"
 
 @interface DetailViewController ()
 
@@ -29,20 +30,12 @@
     [usersList reloadData];
 }
 
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
     return [users count];
-    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 100;
+    return 135;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -51,24 +44,34 @@
     
     if (cell) {
         User* user = (User*)[users objectAtIndex:indexPath.row];
+        cell.userID.text = [NSString stringWithFormat:@"%d",user.userId];
         cell.name.text = user.name;
         cell.panNumber.text = user.panNumber;
         cell.address.text = user.address;
     }
     return cell;
 }
+
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     [self deleteUser:[users objectAtIndex:indexPath.row]];
-    
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.identifier  isEqual: @"editUserDetails"]) {
+        EditUserDetailViewController* editUserDetailViewController = (EditUserDetailViewController*) segue.destinationViewController;
+        User* user = (User*) [users objectAtIndex:[usersList indexPathForSelectedRow].row];
+        editUserDetailViewController.user = user;
+    }
 }
 
 -(void)deleteUser:(User*)user{
     if ([[DBManager getSharedInstance] deleteRecordFromUserWithID:user.userId]) {
-        [self fetchListAndReload];
+        NSLog(@"record deleted");
     }
     else{
-        [self fetchListAndReload];
+        NSLog(@"record not deleted");
     }
+    [self fetchListAndReload];
 }
 
 @end

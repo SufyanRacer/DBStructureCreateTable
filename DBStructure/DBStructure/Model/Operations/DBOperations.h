@@ -8,10 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "DBManager.h"
+#import "User.h"
 @interface DBOperations : NSObject
 
 @property (atomic) NSMutableArray* tableQueries;
 
 -(void)initializeDatabase;
+
+- (BOOL)updateRecordWithUser:(User*)user;
 
 @end
