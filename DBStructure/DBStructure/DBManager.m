@@ -77,6 +77,8 @@ static sqlite3_stmt *statement = nil;
 -(NSArray*)fetchAllUsers{
     NSMutableArray* users = [[NSMutableArray alloc] init];
     const char *dbpath = [databasePath UTF8String];
+    NSMutableArray* resultSet = [NSMutableArray new];
+    
     if (sqlite3_open(dbpath, &database) == SQLITE_OK)
     {
         NSString *fetchSQL = @"SELECT * FROM User";
@@ -84,6 +86,17 @@ static sqlite3_stmt *statement = nil;
         
         if (sqlite3_prepare_v2(database, fetch_stmt,-1, &statement, NULL) == SQLITE_OK) {
             while (sqlite3_step(statement) == SQLITE_ROW) {
+                
+                NSMutableDictionary* rowData = [NSMutableDictionary new];
+                int columnCount = sqlite3_column_count(statement);
+                
+                for (int i = 0; i < columnCount; i++) {
+                    NSString* attribName = [[NSString alloc] initWithUTF8String:sqlite3_column_name(statement, i)];
+                    NSString* data = [[NSString alloc] initWithUTF8String:sqlite3_column_text(statement, i)];
+                    [rowData setObject:data forKey:attribName];
+                }
+                
+                [resultSet addObject:rowData];
                 int userID = sqlite3_column_int(statement, 0);
                 char *nameChars = (char *) sqlite3_column_text(statement, 1);
                 char *panNumberChars = (char *) sqlite3_column_text(statement, 2);
