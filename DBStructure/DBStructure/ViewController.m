@@ -23,7 +23,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[DBOperations new] initializeDatabase];
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
@@ -46,8 +45,7 @@
 
 -(void)saveDataToDatabase {
     User* user = [[User alloc] initWithName:self.nameField.text panNumber:self.panNumberField.text address:self.addressField.text];
-    DBManager* manager = [DBManager getSharedInstance];
-    [manager saveDataToUserTable:user];
+    [[DBOperations new] saveUserData:user];
 }
 
 - (void)showEmptyFieldsAlert{

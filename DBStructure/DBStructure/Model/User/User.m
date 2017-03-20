@@ -2,7 +2,7 @@
 //  User.m
 //  DBStructure
 //
-//  Created by grepruby on 07/03/17.
+//  Created by Sufyan on 07/03/17.
 //  Copyright © 2017 Sufyan. All rights reserved.
 //
 

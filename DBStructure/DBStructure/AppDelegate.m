@@ -2,11 +2,12 @@
 //  AppDelegate.m
 //  DBStructure
 //
-//  Created by grepruby on 06/03/17.
+//  Created by Sufyan on 06/03/17.
 //  Copyright © 2017 Sufyan. All rights reserved.
 //
 
 #import "AppDelegate.h"
+#import "DBOperations.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +18,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    [[DBOperations new] initializeDatabase];
+    
     return YES;
 }
 

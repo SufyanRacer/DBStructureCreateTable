@@ -2,12 +2,13 @@
 //  DetailViewController.m
 //  DBStructure
 //
-//  Created by grepruby on 07/03/17.
+//  Created by Sufyan on 07/03/17.
 //  Copyright © 2017 Sufyan. All rights reserved.
 //
 
 #import "DetailViewController.h"
 #import "EditUserDetailViewController.h"
+#import "DBOperations.h"
 
 @interface DetailViewController ()
 
@@ -21,13 +22,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"All Users";
-    users = [[DBManager getSharedInstance] fetchAllUsers];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     
+    [self fetchListAndReload];
 }
 
 -(void)fetchListAndReload{
-    users = [[DBManager getSharedInstance] fetchAllUsers];
-    [usersList reloadData];
+    dispatch_async(
+       dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+           users = [[DBManager getSharedInstance] fetchAllUsers];
+           dispatch_async(dispatch_get_main_queue(), ^{
+               [usersList reloadData];
+       });
+    });
+    
+   
+    
+    
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -65,7 +79,8 @@
 }
 
 -(void)deleteUser:(User*)user{
-    if ([[DBManager getSharedInstance] deleteRecordFromUserWithID:user.userId]) {
+    
+    if ([[DBOperations new] deleteRecordWithUserID:user.userId]) {
         NSLog(@"record deleted");
     }
     else{

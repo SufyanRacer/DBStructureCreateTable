@@ -2,7 +2,7 @@
 //  EditUserDetailViewController.m
 //  DBStructure
 //
-//  Created by grepruby on 17/03/17.
+//  Created by Sufyan on 17/03/17.
 //  Copyright © 2017 Sufyan. All rights reserved.
 //
 
@@ -53,6 +53,11 @@
     if (!isUpdated) {
         NSLog(@"Data is not updated due to some issue.");
     }
+    [self popBack];
+}
+
+-(void)popBack{
+    [self.navigationController popViewControllerAnimated:true];
 }
 
 - (void)showEmptyFieldsAlert{
