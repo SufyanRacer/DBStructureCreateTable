@@ -2,7 +2,7 @@
 //  DBOperations.m
 //  DBStructure
 //
-//  Created by grepruby on 07/03/17.
+//  Created by Sufyan on 07/03/17.
 //  Copyright © 2017 Sufyan. All rights reserved.
 //
 
@@ -70,10 +70,23 @@
     [manager createTablesWith:tableQueries];
 }
 
-
-- (BOOL)updateRecordWithUser:(User*)user{
+-(void)saveUserData:(User*)user{
     
-    NSString* query = [NSString stringWithFormat:@"UPDATE peopleInfo SET Name='%@', PANNumber='%@', Address='%@' where Id=%d", user.name, user.panNumber, user.address, user.userId];
+    NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO User (Name, PANNumber,Address) VALUES('%@', '%@', '%@')", user.name,user.panNumber,user.address];
+    
+    DBManager* manager = [DBManager getSharedInstance];
+    [manager updateRecordWithQuery:insertSQL];
+}
+
+-(BOOL)updateRecordWithUser:(User*)user{
+    
+    NSString* query = [NSString stringWithFormat:@"UPDATE User SET Name='%@', PANNumber='%@', Address='%@' where Id=%d", user.name, user.panNumber, user.address, user.userId];
+    DBManager* manager = [DBManager getSharedInstance];
+    return [manager updateRecordWithQuery:query];
+}
+
+-(BOOL)deleteRecordWithUserID:(int)userID{
+    NSString *query = [NSString stringWithFormat: @"DELETE FROM User WHERE Id=%d",userID];
     DBManager* manager = [DBManager getSharedInstance];
     return [manager updateRecordWithQuery:query];
 }

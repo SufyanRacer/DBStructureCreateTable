@@ -2,7 +2,7 @@
 //  DBOperations.h
 //  DBStructure
 //
-//  Created by grepruby on 07/03/17.
+//  Created by Sufyan on 07/03/17.
 //  Copyright © 2017 Sufyan. All rights reserved.
 //
 
@@ -15,6 +15,7 @@
 
 -(void)initializeDatabase;
 
-- (BOOL)updateRecordWithUser:(User*)user;
-
+-(void)saveUserData:(User*)user;
+-(BOOL)updateRecordWithUser:(User*)user;
+-(BOOL)deleteRecordWithUserID:(int)userID;
 @end

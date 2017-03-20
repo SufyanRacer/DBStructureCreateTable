@@ -2,7 +2,7 @@
 //  DBManager.m
 //  DBStructure
 //
-//  Created by grepruby on 07/03/17.
+//  Created by Sufyan on 07/03/17.
 //  Copyright © 2017 Sufyan. All rights reserved.
 //
 
@@ -62,49 +62,16 @@ static sqlite3_stmt *statement = nil;
     return isSuccess;
 }
 
--(BOOL)createTablesWith:(NSArray*)tableQueries{
+-(void)createTablesWith:(NSArray*)tableQueries{
     if ([tableQueries count]>= 1) {
-        BOOL isSuccess = YES;
-        
-        const char *dbpath = [databasePath UTF8String];
-        if (sqlite3_open(dbpath, &database) == SQLITE_OK)
-        {
-        
-            for (NSString* query in tableQueries) {
-                char *errMsg;
-                const char *sql_stmt =  [query UTF8String];
-                if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK)
-                {
-                    isSuccess = NO;
-                    NSLog(@"Failed to create table");
-                }
+        for (NSString* query in tableQueries) {
+            if ( [self updateRecordWithQuery:query]) {
+                NSLog(@"Table created with query : %@", query);
+            } else {
+                NSLog(@"Failed to create table with query : %@", query);
             }
-            sqlite3_close(database);
-        }
-        return isSuccess;
-        
-    } else {
-        return NO;
-    }
-    
-}
-
--(BOOL)saveDataToUserTable:(User*)user{
-    const char *dbpath = [databasePath UTF8String];
-    if (sqlite3_open(dbpath, &database) == SQLITE_OK)
-    {
-        NSString *insertSQL = [NSString stringWithFormat:@"INSERT INTO User (name, PANNumber,Address) VALUES('%@', '%@', '%@')", user.name,user.panNumber,user.address];
-        const char *insert_stmt = [insertSQL UTF8String];
-        sqlite3_prepare_v2(database, insert_stmt,-1, &statement, NULL);
-        if (sqlite3_step(statement) == SQLITE_DONE)
-        {
-            return YES;
-        }
-        else {
-            return NO;
         }
     }
-    return NO;
 }
 
 -(NSArray*)fetchAllUsers{
@@ -128,6 +95,7 @@ static sqlite3_stmt *statement = nil;
                 [users addObject:user];
             }
             sqlite3_finalize(statement);
+            sqlite3_close(database);
         }
     }
     return users;
@@ -136,6 +104,7 @@ static sqlite3_stmt *statement = nil;
 
 -(BOOL)updateRecordWithQuery:(NSString*)querySQL{
     
+    BOOL isRecordUpdated = NO;
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK)
     {
@@ -144,36 +113,15 @@ static sqlite3_stmt *statement = nil;
         if (sqlite3_step(statement) == SQLITE_DONE)
         {
             NSLog(@"Record updated");
-            return YES;
+            isRecordUpdated = YES;
         } else {
             NSLog(@"Failed to update record");
-            return NO;
+            isRecordUpdated = NO;
         }
+        sqlite3_finalize(statement);
+        sqlite3_close(database);
     }
-    return NO;
+    return isRecordUpdated;
 }
-
-
--(BOOL)deleteRecordFromUserWithID:(int)userID{
-    
-    const char *dbpath = [databasePath UTF8String];
-    if (sqlite3_open(dbpath, &database) == SQLITE_OK)
-    {
-        NSString *querySQL = [NSString stringWithFormat: @"DELETE FROM User WHERE Id=%d",userID];
-        const char *query_stmt = [querySQL UTF8String];
-        sqlite3_prepare_v2(database, query_stmt,-1, &statement, NULL);
-        if (sqlite3_step(statement) == SQLITE_DONE)
-        {
-            NSLog(@"deleted record");
-            return YES;
-        } else {
-            NSLog(@"Failed to delete record");
-            return NO;
-        }
-    }
-    return NO;
-}
-
-
 
 @end
